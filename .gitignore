@@ -1,0 +1,8 @@
+.vscode/
+develop/
+dist/
+doc/
+node_modules/
+product/assets/
+product/
+src/assets/
