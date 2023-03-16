@@ -1,4 +1,5 @@
 import { AtsumaruBase, AtsumaruConsts, AtsumaruServerDataLoad, AtsumaruServerDataLoadInfo } from "../atsumaru/atsumaru";
+import { LocalStorage, LocalStorageItem } from "../common/local-storage";
 import { Assets } from "../consts";
 import { Globals } from "../globals";
 import { Log } from "../service/logwithstamp";
@@ -6,16 +7,16 @@ import { Log } from "../service/logwithstamp";
 export class SceneLoading extends Phaser.Scene {
 
     private text: Phaser.GameObjects.Text | null;
-    private atsumaruValid: boolean;
-    private atsumaruLoaded: boolean;
+    private isLoading: boolean;
+    private isLoaded: boolean;
     private atsumaruServerDataLoad: AtsumaruServerDataLoad | null;
 
     constructor() {
         super('SceneLoading');
 
         this.text = null;
-        this.atsumaruValid = false;
-        this.atsumaruLoaded = false;
+        this.isLoading = false;
+        this.isLoaded = false;
         this.atsumaruServerDataLoad = null;
     }
 
@@ -31,6 +32,7 @@ export class SceneLoading extends Phaser.Scene {
         this.load.atlas(Assets.Graphic.Icons.KEY, Assets.Graphic.Icons.FILE, Assets.Graphic.Icons.ATLAS);
         this.load.atlas(Assets.Graphic.Title.KEY, Assets.Graphic.Title.FILE, Assets.Graphic.Title.ATLAS);
         this.load.atlas(Assets.Graphic.Point.KEY, Assets.Graphic.Point.FILE, Assets.Graphic.Point.ATLAS);
+        this.load.atlas(Assets.Graphic.SoundIcons.Atlas.NAME, Assets.Graphic.SoundIcons.Atlas.FILE, Assets.Graphic.SoundIcons.Atlas.ATLAS);
 
 
         //オーディオ
@@ -39,31 +41,13 @@ export class SceneLoading extends Phaser.Scene {
             this.load.audio(audio.KEY, [audio.OGG, audio.MP3]);
         }
 
-        //オーディオ
-        // for (let i = 0; i < Assets.Audio.SEs.length; i++) {
-        //     const audio = Assets.Audio.SEs[i];
-        //     this.load.audio(audio.KEY, [audio.OGG, audio.MP3]);
-        // }
-        // for (let i = 0; i < Assets.Audio.BGMs.length; i++) {
-        //     const audio = Assets.Audio.BGMs[i];
-        //     this.load.audio(audio.KEY, [audio.OGG, audio.MP3]);
-        // }
-
-        //タイルマップ
-        //ステージ開始時にロードでもいいかもしれない…
-        // for (let i = 0; i < Assets.Tilemaps.length; i++) {
-        //     const key = Assets.Tilemaps[i].KEY;
-        //     const file = Assets.Tilemaps[i].FILE;
-        //     this.load.tilemapTiledJSON(key, file);
-        // }
-
         //サーバデータ
         {
             if (AtsumaruBase.isValid()) {
-                this.atsumaruValid = true;
+                this.isLoading = true;
                 this.atsumaruServerDataLoad = new AtsumaruServerDataLoad();
                 this.atsumaruServerDataLoad.load((info: AtsumaruServerDataLoadInfo) => {
-                    this.atsumaruLoaded = true;
+                    this.isLoaded = true;
                     if (info.stat === AtsumaruConsts.CommStat.SUCCESS) {
                         const serverData = Globals.get().getServerData();
                         info.data.forEach(storageItem => {
@@ -71,6 +55,19 @@ export class SceneLoading extends Phaser.Scene {
                             Log.put(`key:${storageItem.key} value:${storageItem.value}`, 'SaverDataLoad');
                         });
 
+                    }
+                });
+            }
+            else {
+                this.isLoading = true;
+                LocalStorage.loadLocalData((result: number, data: LocalStorageItem[]) => {
+                    this.isLoaded = true;
+                    if (result === AtsumaruConsts.CommStat.SUCCESS) {
+                        const serverData = Globals.get().getServerData();
+                        data.forEach(storageItem => {
+                            serverData.set(storageItem.key, storageItem.value);
+                            Log.put(`key:${storageItem.key} value:${storageItem.value}`, 'SaverDataLoad');
+                        });
                     }
                 });
             }
@@ -100,8 +97,8 @@ export class SceneLoading extends Phaser.Scene {
     }
 
     update() {
-        if (this.atsumaruValid) {
-            if (!this.atsumaruLoaded) {
+        if (this.isLoading) {
+            if (!this.isLoaded) {
                 return;
             }
 

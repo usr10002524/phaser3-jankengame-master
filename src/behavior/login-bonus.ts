@@ -5,6 +5,7 @@ import { AtsumaruBase, AtsumaruConsts, AtsumaruServerDataSave } from "../atsumar
 import { Globals } from "../globals";
 import { Sheet } from "../objects/sheet/sheet";
 import { SceneMain } from "../scene/scene-main";
+import { LocalStorage } from "../common/local-storage";
 
 export class LoginBonus extends Behavior {
 
@@ -62,12 +63,12 @@ export class LoginBonus extends Behavior {
     //extends Behavior
     initialize(): void {
         //アツマール有効チェック
-        if (!AtsumaruBase.isValid() && !this.debugAtsumaruCheckSkip) {
-            //アツマールが使えない場合はとりあえず100枚配る
-            Globals.get().setMedal(100);
-            this._onEnd();
-            return;
-        }
+        // if (!AtsumaruBase.isValid() && !this.debugAtsumaruCheckSkip) {
+        //     //アツマールが使えない場合はとりあえず100枚配る
+        //     Globals.get().setMedal(100);
+        //     this._onEnd();
+        //     return;
+        // }
 
         //ログボデータのセットアップ
         this._initLoginBonusData();
@@ -234,9 +235,17 @@ export class LoginBonus extends Behavior {
         storageItem.forEach(element => {
             Log.put(`key:${element.key} value:${element.value}`, 'LoginBonus._stepSaveData');
         });
-        this.serverDataSave.save(storageItem, (stat: number) => {
-            this._stepSaveDataWait(stat);
-        });
+
+        if (AtsumaruBase.isValid()) {
+            this.serverDataSave.save(storageItem, (stat: number) => {
+                this._stepSaveDataWait(stat);
+            });
+        }
+        else {
+            LocalStorage.saveLocalData(storageItem, (stat: number) => {
+                this._stepSaveDataWait(stat);
+            });
+        }
 
     }
 

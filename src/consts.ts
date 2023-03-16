@@ -145,39 +145,6 @@ export const Consts = {
         },
     },
 
-    //UI
-    // UI: {
-    //     Score: {
-    //         Text: {
-    //             Position: {
-    //                 x: 20,
-    //                 y: 20,
-    //             },
-    //             Origin: {
-    //                 x: 0,
-    //                 y: 0,
-    //             },
-    //             DEPTH: 20,
-    //         },
-    //         Threshold: {
-    //             Small: {
-    //                 VALUE: 100,
-    //                 // DELAY: 0,
-    //                 DELAY: 100,
-    //             },
-    //             Middle: {
-    //                 VALUE: 1000,
-    //                 // DELAY: 100,
-    //                 DELAY: 500,
-    //             },
-    //             Large: {
-    //                 VALUE: 9999999,
-    //                 DELAY: 1000
-    //             },
-    //         },
-    //     },
-    // },
-
     BG: {
         DEPTH: 0,
     },
@@ -230,7 +197,79 @@ export const Consts = {
                 DELAY: 1000
             },
         },
-    }
+    },
+
+    //ボリューム表示
+    SoundVolume: {
+        Base: {
+            Pos: {
+                X: 732,
+                Y: 560,
+            },
+            DEPTH: 7,
+        },
+        Icon: {
+            Pos: {
+                X: -40,
+                Y: 0,
+            },
+            Scale: {
+                X: 0.6,
+                Y: 0.6,
+            },
+            DEPTH: 2,
+        },
+        Handle: {
+            Size: {
+                W: 10,
+                H: 25,
+            },
+            Color: {
+                NORMAL: 0xF0F0F0,
+                DISABLED: 0x808080,
+                GRABED: 0xA0A0A0,
+            },
+            DEPTH: 4,
+        },
+        Guage: {
+            Pos: {
+                X: -24,
+                Y: 0,
+            },
+            Size: {
+                W: 72,
+                H: 10,
+            },
+            Color: {
+                NORMAL: 0xFFFFFF,
+                DISABLED: 0x808080,
+            },
+            DEPTH: 3,
+        },
+        GuageBg: {
+            COLOR: 0x000000,
+            DEPTH: 2,
+        },
+        Panel: {
+            Pos: {
+                X: -58,
+                Y: 0,
+            },
+            Size: {
+                W: 116,
+                H: 40,
+            },
+            COLOR: 0x404040,
+            ALPHA: 0.5,
+            DEPTH: 1,
+        },
+    },
+
+    // 言語
+    Localizable: {
+        ENGLISH: 1,
+        JAPANEASE: 2,
+    },
 }
 
 export const Assets = {
@@ -369,6 +408,26 @@ export const Assets = {
                 POINT_N9: "point_n9",
             },
         },
+
+        // サウンドボリューム
+        SoundIcons: {
+            Atlas: {
+                NAME: "sound_icons",
+                FILE: "image/sound_icons.png",
+                ATLAS: "image/sound_icons_atlas.json",
+            },
+
+            Volume: {
+                ON: "sound_w",
+                OFF: "sound_w",
+                GRAY: "sound_g",
+            },
+            Mute: {
+                ON: "mute_w",
+                OFF: "mute_w",
+                GRAY: "mute_g",
+            },
+        },
     },
 
 
@@ -402,6 +461,34 @@ export const Assets = {
             RSTEP: 'se_01_19',
             STAMP: 'se_03_02',
             PAGE: 'se_05_01',
+        },
+    },
+
+    //言語
+    Localizable: {
+        KEY: "localizable",
+        File: {
+            ENGLISH: "lang/lang-en.json",
+            JAPANEASE: "lang/lang-jp.json",
+            DEFAULT: "lang/lang-en.json",
+        },
+
+        Sentence: {
+            EDIT: "edit",
+            ERASE: "erase",
+            PLAY: "play",
+            PAUSE: "pause",
+            CLEAR: "clear",
+            SPEEDUP: "speedup",
+            SPEEDDOWN: "speeddown",
+            RETURN: "return",
+            SAVE: "save",
+            SCREENSHOT: "screenshot",
+            LETSPUT: "letsput",
+            LETSPLAY: "letsplay",
+            LETSWATCH: "letswatch",
+            EDITMODE: "editmode",
+            PLAYMODE: "playmode",
         },
     },
 

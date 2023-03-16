@@ -18,6 +18,8 @@ import { AtsumaruBase, AtsumaruConsts, AtsumaruMasterVolume, AtsumaruMasterVolum
 import { BgTile } from "../objects/bg/bgtitle";
 import { Point } from "../objects/point/point";
 import { LoginBonusData } from "../bonus/login-bonus-data";
+import { SoundVolume, SoundVolumeConfig } from "../common/sound-volume";
+import { LocalStorage } from "../common/local-storage";
 
 export class SceneMain extends Phaser.Scene {
 
@@ -43,6 +45,7 @@ export class SceneMain extends Phaser.Scene {
 
     private atmrVolume: AtsumaruMasterVolume | null;
     private atmrSnapshot: AtsumaruSnapShot | null;
+    private soundVolume: SoundVolume | null;
 
     static SAVE_EVERY_GAME: boolean = true; //毎ゲームセーブする
 
@@ -92,6 +95,7 @@ export class SceneMain extends Phaser.Scene {
 
         this.atmrVolume = null;
         this.atmrSnapshot = null;
+        this.soundVolume = null;
     }
 
     create(): void {
@@ -404,9 +408,9 @@ export class SceneMain extends Phaser.Scene {
     }
 
     private _serverSave(): void {
-        if (!AtsumaruBase.isValid()) {
-            return; //アツマールが有効ではない
-        }
+        // if (!AtsumaruBase.isValid()) {
+        //     return; //アツマールが有効ではない
+        // }
 
         //現在の値を取得
         const medal = Globals.get().getMedal();
@@ -426,8 +430,13 @@ export class SceneMain extends Phaser.Scene {
             serverData.resetDirty(storageItem.key);
         });
 
-        const serverDataSave = new AtsumaruServerDataSave();
-        serverDataSave.save(strorageItems);
+        if (AtsumaruBase.isValid()) {
+            const serverDataSave = new AtsumaruServerDataSave();
+            serverDataSave.save(strorageItems);
+        }
+        else {
+            LocalStorage.saveLocalData(strorageItems, (stat: number) => { });
+        }
 
         //スコアボード
         // if (highest.updateded) {
@@ -443,15 +452,99 @@ export class SceneMain extends Phaser.Scene {
 
 
     private _initVolume(): void {
-        this.atmrVolume = new AtsumaruMasterVolume();
-        this.atmrVolume.initialize();
-        const masterVolume = this.atmrVolume.getMasterVolume();
-        if (masterVolume != null) {
-            this.sound.volume = masterVolume.volume;
+        if (AtsumaruBase.isValid()) {
+            this.atmrVolume = new AtsumaruMasterVolume();
+            this.atmrVolume.initialize();
+            const masterVolume = this.atmrVolume.getMasterVolume();
+            if (masterVolume != null) {
+                this.sound.volume = masterVolume.volume;
+            }
+            this.atmrVolume.setCallback((info: AtsumaruMasterVolumeInfo) => {
+                this.sound.volume = info.volume;
+            });
         }
-        this.atmrVolume.setCallback((info: AtsumaruMasterVolumeInfo) => {
-            this.sound.volume = info.volume;
-        });
+        else {
+            this._createSoundVolume();
+        }
+    }
+
+    private _createSoundVolume(): void {
+        const config: SoundVolumeConfig = {
+            pos: {
+                x: Consts.SoundVolume.Base.Pos.X,
+                y: Consts.SoundVolume.Base.Pos.Y,
+            },
+            depth: Consts.SoundVolume.Base.DEPTH,
+
+            icon: {
+                atlas: Assets.Graphic.SoundIcons.Atlas.NAME,
+                frame: {
+                    volume: Assets.Graphic.SoundIcons.Volume.ON,
+                    mute: Assets.Graphic.SoundIcons.Mute.ON,
+                },
+                pos: {
+                    x: Consts.SoundVolume.Icon.Pos.X,
+                    y: Consts.SoundVolume.Icon.Pos.Y,
+                },
+                scale: {
+                    x: Consts.SoundVolume.Icon.Scale.X,
+                    y: Consts.SoundVolume.Icon.Scale.Y,
+                },
+                depth: Consts.SoundVolume.Icon.DEPTH,
+            },
+
+            guage: {
+                pos: {
+                    x: Consts.SoundVolume.Guage.Pos.X,
+                    y: Consts.SoundVolume.Guage.Pos.Y,
+                },
+                size: {
+                    w: Consts.SoundVolume.Guage.Size.W,
+                    h: Consts.SoundVolume.Guage.Size.H,
+                },
+                color: {
+                    normal: Consts.SoundVolume.Guage.Color.NORMAL,
+                    disabled: Consts.SoundVolume.Guage.Color.DISABLED,
+                    bg: Consts.SoundVolume.GuageBg.COLOR,
+                },
+                depth: {
+                    bar: Consts.SoundVolume.Guage.DEPTH,
+                    bg: Consts.SoundVolume.GuageBg.DEPTH,
+                },
+            },
+
+            handle: {
+                size: {
+                    w: Consts.SoundVolume.Handle.Size.W,
+                    h: Consts.SoundVolume.Handle.Size.H,
+                },
+                color: {
+                    normal: Consts.SoundVolume.Handle.Color.NORMAL,
+                    disabled: Consts.SoundVolume.Handle.Color.DISABLED,
+                    grabed: Consts.SoundVolume.Handle.Color.GRABED,
+                },
+                depth: Consts.SoundVolume.Handle.DEPTH,
+            },
+
+            panel: {
+                pos: {
+                    x: Consts.SoundVolume.Panel.Pos.X,
+                    y: Consts.SoundVolume.Panel.Pos.Y,
+                },
+                size: {
+                    w: Consts.SoundVolume.Panel.Size.W,
+                    h: Consts.SoundVolume.Panel.Size.H,
+                },
+                color: {
+                    normal: Consts.SoundVolume.Panel.COLOR,
+                },
+                alpha: {
+                    normal: Consts.SoundVolume.Panel.ALPHA,
+                },
+                depth: Consts.SoundVolume.Panel.DEPTH,
+            },
+        }
+        this.soundVolume = new SoundVolume(this, config);
     }
 
     private _initSnapshot(): void {
