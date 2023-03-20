@@ -3,7 +3,7 @@
  */
 export const Consts = {
     TITLE: "JANKEN GAME",
-    VERSION: "202212271428",
+    VERSION: "202303200910",
 
     //画面サイズ
     Screen: {
@@ -445,6 +445,8 @@ export const Assets = {
             { KEY: 'se_05_01', MP3: 'audio/se/se_05_01.mp3', OGG: 'audio/se/se_05_01.ogg' },
             { KEY: 'se_02_10', MP3: 'audio/se/se_02_10.mp3', OGG: 'audio/se/se_02_10.ogg' },
             { KEY: 'se_02_13', MP3: 'audio/se/se_02_13.mp3', OGG: 'audio/se/se_02_13.ogg' },
+            { KEY: 'se_01_11', MP3: 'audio/se/se_01_11.mp3', OGG: 'audio/se/se_01_11.ogg' },
+            { KEY: 'se_01_12', MP3: 'audio/se/se_01_12.mp3', OGG: 'audio/se/se_01_12.ogg' },
         ],
         SE: {
             SELECT: "se_02_13",
@@ -459,8 +461,12 @@ export const Assets = {
             YAPPY: 'se_01_24',
             ZUKO: 'se_01_23',
             RSTEP: 'se_01_19',
-            STAMP: 'se_03_02',
-            PAGE: 'se_05_01',
+            // ニコニコ
+            // STAMP: 'se_03_02',
+            // PAGE: 'se_05_01',
+            // ニコニコ以外
+            STAMP: 'se_01_12',
+            PAGE: 'se_01_11',
         },
     },
 
