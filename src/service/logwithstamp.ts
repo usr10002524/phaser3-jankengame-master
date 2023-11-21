@@ -1,6 +1,14 @@
 import { Utility } from "./utility";
 
+/**
+ * 日時付きログクラス
+ */
 export class Log {
+    /**
+     * 日時月でログを出力する
+     * @param text 文字列
+     * @param scope スコープ
+     */
     static put(text: string, scope?: string) {
         const date = new Date();
         const Y = Utility.zeroPadding(date.getFullYear(), 4);

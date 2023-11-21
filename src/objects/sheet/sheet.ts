@@ -2,6 +2,9 @@ import { LoginBonusData } from "../../bonus/login-bonus-data";
 import { Assets, Consts } from "../../consts";
 import { Utility } from "../../service/utility";
 
+/**
+ * スタンプシート表示クラス
+ */
 export class Sheet {
 
     private scene: Phaser.Scene;
@@ -18,6 +21,11 @@ export class Sheet {
     private tween: Phaser.Tweens.Tween | null;
     private isAnimeEnd: boolean;
 
+    /**
+     * コンストラクタ
+     * @param scene シーン
+     * @param data ログボデータ
+     */
     constructor(scene: Phaser.Scene, data: LoginBonusData) {
         this.scene = scene;
         this.data = data;
@@ -101,6 +109,9 @@ export class Sheet {
         this.isAnimeEnd = false;
     }
 
+    /**
+     * スタンプシートのセットアップを行う
+     */
     setupStart(): void {
         //前回までのスタンプを表示
         this._eraseStamps();
@@ -118,6 +129,9 @@ export class Sheet {
         this.container.sort('depth');
     }
 
+    /**
+     * スタンプのセットアップを行う
+     */
     setupStamp(): void {
         //今回のスタンプを表示
 
@@ -136,6 +150,9 @@ export class Sheet {
         this.container.sort('depth');
     }
 
+    /**
+     * スタンプシートの表示開始
+     */
     startSheetIn(): void {
         if (this.tween != null) {
             this.tween.remove();
@@ -164,6 +181,9 @@ export class Sheet {
         });
     }
 
+    /**
+     * スタンプ押印の開始
+     */
     startStamp(): void {
         if (this.tween != null) {
             this.tween.remove();
@@ -195,6 +215,9 @@ export class Sheet {
         })
     }
 
+    /**
+     * シート切り替えの開始
+     */
     startSheetChange(): void {
         if (this.tween != null) {
             this.tween.remove();
@@ -236,6 +259,9 @@ export class Sheet {
         });
     }
 
+    /**
+     * 次回ボーナスの表示開始
+     */
     startNextBonus(): void {
         if (this.tween != null) {
             this.tween.remove();
@@ -277,7 +303,9 @@ export class Sheet {
         })
     }
 
-
+    /**
+     * シート退出開始
+     */
     startSheetOut(): void {
         if (this.tween != null) {
             this.tween.remove();
@@ -306,10 +334,15 @@ export class Sheet {
         });
     }
 
+    /**
+     * アニメーションが終了したか
+     * @returns アニメーションが終了した場合は true、そうでない場合は false を返す。
+     */
     isEnd(): boolean {
         return this.isAnimeEnd;
     }
 
+    // スタンプを消去する
     private _eraseStamps(): void {
         this.container.remove(this.stamps);
         for (let i = 0; i < this.stamps.length; i++) {
@@ -318,6 +351,7 @@ export class Sheet {
         this.stamps = [];
     }
 
+    // セルの表示位置を取得
     private _getCellPos(index: number): { x: number, y: number } {
         if (index < 0 || index >= Consts.Sheet.Cells.Position.length) {
             return { x: 0, y: 0 };

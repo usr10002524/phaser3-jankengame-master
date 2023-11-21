@@ -1,5 +1,8 @@
 import { Assets } from "../../consts";
 
+/**
+ * ルーレット関連の定数
+ */
 export class RouletteConst {
     static cellProp: { r: number, x: number, y: number, frame: string, effFrame: string }[] = [
         { r: 0, x: 0, y: -210, frame: Assets.Graphic.Roulette.Frames.O_CELL, effFrame: Assets.Graphic.Roulette.Frames.O_CELL_EFF2 },

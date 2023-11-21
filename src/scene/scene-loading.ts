@@ -4,6 +4,9 @@ import { Assets } from "../consts";
 import { Globals } from "../globals";
 import { Log } from "../service/logwithstamp";
 
+/**
+ * ローディングシーン
+ */
 export class SceneLoading extends Phaser.Scene {
 
     private text: Phaser.GameObjects.Text | null;
@@ -11,6 +14,9 @@ export class SceneLoading extends Phaser.Scene {
     private isLoaded: boolean;
     private atsumaruServerDataLoad: AtsumaruServerDataLoad | null;
 
+    /**
+     * コンストラクタ
+     */
     constructor() {
         super('SceneLoading');
 
@@ -20,6 +26,9 @@ export class SceneLoading extends Phaser.Scene {
         this.atsumaruServerDataLoad = null;
     }
 
+    /**
+     * ロード
+     */
     preload() {
         //TODO ここでアセットを読み込む
         this.load.setBaseURL(Assets.BASE);
@@ -93,9 +102,15 @@ export class SceneLoading extends Phaser.Scene {
         }, this);
     }
 
+    /**
+     * 初期化処理
+     */
     create() {
     }
 
+    /**
+     * 更新処理
+     */
     update() {
         if (this.isLoading) {
             if (!this.isLoaded) {

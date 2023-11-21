@@ -1,6 +1,8 @@
-
+/**
+ * じゃんけんゲームの各種定数
+ */
 export const JankenCoreConsts = {
-    //じゃんけん勝率
+    // じゃんけん勝率
     Rate: [
         4600,
         4400,
@@ -11,6 +13,7 @@ export const JankenCoreConsts = {
         3400,
         3200,
     ],
+    // 勝率の出現テーブル
     RateIndexTable: [
         1500,
         2000,

@@ -1,6 +1,9 @@
 import { Assets, Consts } from "../../consts";
 import { RouletteConst } from "./roulette-const";
 
+/**
+ * ルーレット表示クラス
+ */
 export class Roulette {
     private scene: Phaser.Scene;
 
@@ -19,6 +22,10 @@ export class Roulette {
     private lampContainer: Phaser.GameObjects.Container;
     private lampEffContainer: Phaser.GameObjects.Container[];
 
+    /**
+     * コンストラクタ
+     * @param scene シーン
+     */
     constructor(scene: Phaser.Scene) {
         this.scene = scene;
 
@@ -233,6 +240,9 @@ export class Roulette {
         }
     }
 
+    /**
+     * すべてのランプを消灯する
+     */
     lampAllOff(): void {
         for (let i = 0; i < this.lampEffContainer.length; i++) {
             this.lampEffContainer[i].setVisible(false);

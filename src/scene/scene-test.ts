@@ -9,6 +9,9 @@ import { Random } from "../service/random";
 import { RouletteCore } from "../core/roulette/roulette-core";
 import { RouletteCoreConsts } from "../core/roulette/roulette-core-consts";
 
+/**
+ * テストシーン
+ */
 export class SceneTest extends Phaser.Scene {
 
     private trials: number;
@@ -21,6 +24,9 @@ export class SceneTest extends Phaser.Scene {
 
     private gameDiag: GameDiagnotics | null;
 
+    /**
+     * コンストラクタ
+     */
     constructor() {
         super({ key: "Test" });
 
@@ -35,9 +41,15 @@ export class SceneTest extends Phaser.Scene {
         this.gameDiag = null;
     }
 
+    /**
+     * ロード
+     */
     preload(): void {
     }
 
+    /**
+     * 初期化処理
+     */
     create(): void {
 
         const seed = Date.now();
@@ -135,7 +147,9 @@ export class SceneTest extends Phaser.Scene {
         }
     }
 
-
+    /**
+     * 更新処理
+     */
     update(): void {
 
 
@@ -145,12 +159,18 @@ export class SceneTest extends Phaser.Scene {
 }
 
 
+/**
+ * 統計情報
+ */
 class GameDiagnotics {
     private trial: number;
     private totalWin: number;
     private maxWin: number;
     private volatarity: { min: number, max: number, count: number }[];
 
+    /**
+     * コンストラクタ
+     */
     constructor() {
         this.trial = 0;
         this.totalWin = 0;
@@ -158,6 +178,9 @@ class GameDiagnotics {
         this.volatarity = [];
     }
 
+    /**
+     * 初期化処理
+     */
     start(): void {
         this.trial = 0;
         this.totalWin = 0;
@@ -189,6 +212,10 @@ class GameDiagnotics {
 
     }
 
+    /**
+     * 結果を追加する
+     * @param win 獲得WIN
+     */
     add(win: number): void {
         if (win > this.maxWin) {
             this.maxWin = win;
@@ -205,6 +232,9 @@ class GameDiagnotics {
         this.totalWin += win;
     }
 
+    /**
+     * 結果を出力する
+     */
     report(): void {
         Log.put(`,trial,${this.trial}`);
         Log.put(`,totalWin,${this.totalWin}`);
@@ -218,6 +248,7 @@ class GameDiagnotics {
         }
     }
 
+    // 獲得WINからインデックスを取得する
     private _getIndex(win: number): number {
         for (let i = 0; i < this.volatarity.length; i++) {
             const v = this.volatarity[i];

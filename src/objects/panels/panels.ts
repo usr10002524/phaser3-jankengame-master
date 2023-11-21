@@ -3,12 +3,19 @@ import { Log } from "../../service/logwithstamp";
 import { PanelImage } from "./panelImage";
 import { PanelsConst } from "./panels-const";
 
+/**
+ * パネルクラス
+ */
 export class Panels {
 
     private scene: Phaser.Scene;
     private panels: PanelImage[];
     private panelContainer: Phaser.GameObjects.Container;
 
+    /**
+     * コンストラクタ
+     * @param scene シーン
+     */
     constructor(scene: Phaser.Scene) {
         this.scene = scene;
 

@@ -2,30 +2,40 @@ import { Consts } from "../../consts";
 import { Log } from "../../service/logwithstamp";
 import { JankenInfo } from "./janken-core";
 
-
+/**
+ * じゃんけんゲーム統計データ
+ */
 export class JankenCoreDiagnotics {
+    // 試行回数
     private trials: number;
+    // 結果
     private result: {
         win: number,
         lose: number,
         draw: number,
     }[];
+    // 強制で決定した際の結果
     private resultForce: {
         win: number,
         lose: number,
         draw: number,
     }[];
+    // プレーヤーの手
     private playerSuit: {
         gu: number,
         choki: number,
         pa: number,
     }[];
+    // CPUの手
     private enemySuit: {
         gu: number,
         choki: number,
         pa: number,
     }[];
 
+    /**
+     * コンストラクタ
+     */
     constructor() {
         this.trials = 0;
         this.result = [];
@@ -34,6 +44,10 @@ export class JankenCoreDiagnotics {
         this.enemySuit = [];
     }
 
+    /**
+     * 開始
+     * @param maxRound 最大ラウンド数
+     */
     start(maxRound: number) {
         this.result = [];
         this.resultForce = [];
@@ -48,6 +62,10 @@ export class JankenCoreDiagnotics {
         }
     }
 
+    /**
+     * 履歴を追加する
+     * @param history 履歴データ
+     */
     add(history: JankenInfo[]): void {
         if (history.length === 0) {
             return;
@@ -88,6 +106,9 @@ export class JankenCoreDiagnotics {
         }
     }
 
+    /**
+     * 結果を出力する
+     */
     report(): void {
         Log.put(`,trials,${this.trials}`);
         Log.put(`,result`);

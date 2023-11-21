@@ -6,6 +6,9 @@ import { Behavior } from "../service/behavior";
 import { Log } from "../service/logwithstamp";
 import { Lottery } from "../service/lottery";
 
+/**
+ * ルーレットプレー中処理
+ */
 export class RoulettePlay extends Behavior {
 
     private scene: SceneMain;
@@ -26,6 +29,12 @@ export class RoulettePlay extends Behavior {
     private static DURATION_MIDDLE = 250;
     private static DURATION_LOW = 500;
 
+    /**
+     * コンストラクタ
+     * @param scene シーン
+     * @param stopIndex 停止位置
+     * @param playerSuit プレーヤーの手
+     */
     constructor(scene: SceneMain, stopIndex: number, playerSuit: number) {
         super('RoulettePlay');
 
@@ -45,26 +54,41 @@ export class RoulettePlay extends Behavior {
         this.isEnd = false;
     }
 
+    /**
+     * 初期化処理
+     */
     initialize(): void {
         this._setupDirection();
         this._updateRoulette();
         this._panelErase();
     }
 
+    /**
+     * 更新処理
+     */
     update(): void {
     }
 
+    /**
+     * 終了処理
+     */
     finalize(): void {
         if (this.timer != null) {
             this.timer.remove();
         }
     }
 
+    /**
+     * 表示が終了したかチェックする
+     * @returns 表示が終了した場合は true 、そうでない場合は false を返す。
+     */
     isFinished(): boolean {
         return this.isEnd;
     }
 
-
+    /**
+     * ルーレット更新処理
+     */
     private _updateRoulette(): void {
         const position = this.currentStep % Consts.Cells.Position.POS_MAX;
         if (this.roulette != null) {
@@ -117,6 +141,7 @@ export class RoulettePlay extends Behavior {
         this.currentStep++;
     }
 
+    // 再生速度を取得
     private _getDuretion(): number {
         if (this.currentStep >= this.stepToLow) {
             return RoulettePlay.DURATION_LOW;
@@ -129,6 +154,9 @@ export class RoulettePlay extends Behavior {
         }
     }
 
+    /**
+     * 演出のセットアップ
+     */
     private _setupDirection(): void {
         //どういう過程で停止位置に止まるかを決める
 
@@ -169,6 +197,11 @@ export class RoulettePlay extends Behavior {
         }
     }
 
+    /**
+     * 中速に切り替わる最小ステップ数を取得する
+     * @param stepCount 止まるまでのステップ数
+     * @returns 中速に切り替わる最小ステップ数
+     */
     private _highStepCountMin(stepCount: number): number {
         let rate = 0.75;
 
@@ -181,16 +214,31 @@ export class RoulettePlay extends Behavior {
         return step;
     }
 
+    /**
+     * 中速に切り替わる最大ステップ数を取得する
+     * @param stepCount 止まるまでのステップ数
+     * @returns 中速に切り替わる最大ステップ数
+     */
     private _highStepCountMax(stepCount: number): number {
         const rate = 0.9;
         const step = Math.floor(stepCount * rate);
         return step;
     }
 
+    /**
+     * 低速に切り替わる最小ステップ数を取得する
+     * @param stepCount 止まるまでのステップ数
+     * @returns 低速に切り替わる最小ステップ数
+     */
     private _lowStepCountMin(stepCount: number): number {
         return 0;
     }
 
+    /**
+     * 低速に切り替わる最大ステップ数を取得する
+     * @param stepCount 止まるまでのステップ数
+     * @returns 低速に切り替わる最大ステップ数
+     */
     private _lowStepCountMax(stepCount: number): number {
         let rate = 0.1;
 
@@ -203,6 +251,9 @@ export class RoulettePlay extends Behavior {
         return step;
     }
 
+    /**
+     * パネルを消去する
+     */
     private _panelErase(): void {
         const panels = this.scene.getPanels();
         if (panels != null) {
@@ -219,6 +270,7 @@ export class RoulettePlay extends Behavior {
         }
     }
 
+    // 終了時の処理
     private _onEnd(): void {
         if (this.roulette != null) {
             this.roulette.cellAllOff();

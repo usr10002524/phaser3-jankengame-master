@@ -1,3 +1,7 @@
+/**
+ * AtsumaruAPI を使う際のラッパー
+ */
+
 import { AtsumaruApiError, Observer, StorageItem, Subscription } from "@atsumaru/api-types";
 import { RPGAtsumaruApi } from "@atsumaru/api-types";
 
@@ -8,7 +12,7 @@ export const AtsumaruConsts = {
         MEDAL: 'medal',
         // HIGHEST: 'highest',
     },
-
+    //スコアボード
     ScoreBoard: {
         HIGHEST: 1,
     },
@@ -24,6 +28,7 @@ export const AtsumaruConsts = {
 }
 
 export class AtsumaruBase {
+    //Atumaruが有効かどうか
     static isValid(): boolean {
         const atsumaru = window.RPGAtsumaru;
         if (atsumaru) {
@@ -52,6 +57,9 @@ export type AtsumaruMasterVolumeInfo = {
     volume: number;     //現在のマスターボリュームの値
 }
 
+/**
+ * マスターボリューム
+ */
 export class AtsumaruMasterVolume
     extends AtsumaruBase
     implements Observer<number>
@@ -93,6 +101,10 @@ export class AtsumaruMasterVolume
         }
     }
 
+    /**
+     * コールバックを設定する
+     * @param fn コールバック関数
+     */
     setCallback(fn: (info: AtsumaruMasterVolumeInfo) => void) {
         this.callback = fn;
     }
@@ -117,7 +129,7 @@ export class AtsumaruMasterVolume
         }
     }
 
-
+    // マスターボリュームを取得する
     private _getMasterVolume(): number | null {
         let volume = null;
         this._withAtsumaru(atsumaru => {
@@ -127,6 +139,7 @@ export class AtsumaruMasterVolume
         return volume;
     }
 
+    // ボリューム変更コールバックを設定する
     private _setChangeVolumeCallback(): void {
         // console.log(`AtsumaruMasterVolume._setChangeVolumeCallback called.`);
         this._withAtsumaru(atsumaru => atsumaru.volume.changed.subscribe(this));
@@ -156,6 +169,9 @@ export class AtsumaruMasterVolume
 }
 
 //--- snap shot -----------------------
+/**
+ * スナップショット
+ */
 export class AtsumaruSnapShot extends AtsumaruBase {
 
     private currentScene: Phaser.Scene | null;
@@ -176,10 +192,12 @@ export class AtsumaruSnapShot extends AtsumaruBase {
         this._withAtsumaru(atsumaru => {
             atsumaru.experimental?.screenshot?.setScreenshotHandler?.(async () => {
                 if (this.currentScene == null) {
+                    // シーンが設定されていない
                     console.log("currentScene == null");
                     return "";
                 }
                 else {
+                    // シーンからスナップショットを取得する
                     this.currentScene.game.renderer.snapshot((snapshot: Phaser.Display.Color | HTMLImageElement) => {
                         console.log("_snapshot called");
 
@@ -209,6 +227,7 @@ export class AtsumaruSnapShot extends AtsumaruBase {
 
     }
 
+    // シーンをセットする
     setScene(scene: Phaser.Scene): void {
         this.currentScene = scene;
     }
@@ -228,6 +247,9 @@ export type AtsumaruServerDataLoadInfo = {
     data: StorageItem[],
 };
 
+/**
+ * サーバデータロード
+ */
 export class AtsumaruServerDataLoad extends AtsumaruBase {
 
     private stat: number;
@@ -241,10 +263,18 @@ export class AtsumaruServerDataLoad extends AtsumaruBase {
         this.callback = null;
     }
 
+    /**
+     * コールバックを設定する
+     * @param fn コールバック
+     */
     setCallback(fn: (info: AtsumaruServerDataLoadInfo) => void): void {
         this.callback = fn;
     }
 
+    /**
+     * データをロードする
+     * @param callback ロード完了時のコールバック
+     */
     load(callback?: (info: AtsumaruServerDataLoadInfo) => void): void {
         console.log('AtsumaruServerDataLoad called.');
 
@@ -292,6 +322,10 @@ export class AtsumaruServerDataLoad extends AtsumaruBase {
         });
     }
 
+    /**
+     * データロード状況をチェックする
+     * @returns データロード情報
+     */
     check(): AtsumaruServerDataLoadInfo {
         const info: AtsumaruServerDataLoadInfo = { stat: this.stat, data: this.items };
         return info;
@@ -299,6 +333,9 @@ export class AtsumaruServerDataLoad extends AtsumaruBase {
 }
 
 //--- server data save -----------------------
+/**
+ * サーバデータセーブ
+ */
 export class AtsumaruServerDataSave extends AtsumaruBase {
 
     private stat: number;
@@ -310,10 +347,19 @@ export class AtsumaruServerDataSave extends AtsumaruBase {
         this.callback = null;
     }
 
+    /**
+     * コールバックを設定する
+     * @param fn コールバック関数
+     */
     setCallback(fn: (stat: number) => void): void {
         this.callback = fn;
     }
 
+    /**
+     * データをセーブする
+     * @param data セーブするデータ
+     * @param callback セーブ完了時のコールバック
+     */
     save(data: StorageItem[], callback?: (stat: number) => void): void {
         console.log('AtsumaruServerDataSave called.');
 
@@ -355,12 +401,19 @@ export class AtsumaruServerDataSave extends AtsumaruBase {
         });
     }
 
+    /**
+     * データセーブ状況をチェックする
+     * @returns 通信結果(@see AtsumaruConsts.CommStat)
+     */
     check(): number {
         return this.stat;
     }
 }
 
 //--- server data delete -----------------------
+/**
+ * サーバデータ削除
+ */
 export class AtsumaruServerDataDelete extends AtsumaruBase {
 
     private stat: number;
@@ -372,10 +425,19 @@ export class AtsumaruServerDataDelete extends AtsumaruBase {
         this.callback = null;
     }
 
+    /**
+     * コールバックを設定する
+     * @param fn コールバック関数
+     */
     setCallback(fn: (stat: number) => void): void {
         this.callback = fn;
     }
 
+    /**
+     * データを削除する
+     * @param key 削除するデータのキー
+     * @param callback 削除完了コールバック
+     */
     delete(key: string, callback?: (stat: number) => void): void {
         console.log('AtsumaruServerDataDelete called.');
 
@@ -417,6 +479,10 @@ export class AtsumaruServerDataDelete extends AtsumaruBase {
         });
     }
 
+    /**
+     * データ削除状況をチェックする
+     * @returns 通信結果(@see AtsumaruConsts.CommStat)
+     */
     check(): number {
         return this.stat;
     }
@@ -424,6 +490,9 @@ export class AtsumaruServerDataDelete extends AtsumaruBase {
 
 
 //--- scoreboard save -----------------------
+/**
+ * スコアボードデータ保存
+ */
 export class AtsumaruScoreboardSave extends AtsumaruBase {
 
     private stat: number;
@@ -436,6 +505,10 @@ export class AtsumaruScoreboardSave extends AtsumaruBase {
         this.callback = null;
     }
 
+    /**
+     * コールバック関数をセットする
+     * @param fn コールバック関数
+     */
     setCallback(fn: (stat: number) => void): void {
         this.callback = fn;
     }
@@ -481,12 +554,19 @@ export class AtsumaruScoreboardSave extends AtsumaruBase {
         });
     }
 
+    /**
+     * データ削除状況をチェックする
+     * @returns 通信結果(@see AtsumaruConsts.CommStat)
+     */
     check(): number {
         return this.stat;
     }
 }
 
 //--- scoreboard display -----------------------
+/**
+ * スコアボード表示
+ */
 export class AtsumaruScoreboardDisplay extends AtsumaruBase {
 
     private stat: number;
@@ -499,10 +579,19 @@ export class AtsumaruScoreboardDisplay extends AtsumaruBase {
         this.callback = null;
     }
 
+    /**
+     * コールバックを設定する
+     * @param fn コールバック関数
+     */
     setCallback(fn: (stat: number) => void): void {
         this.callback = fn;
     }
 
+    /**
+     * スコアボードを表示する
+     * @param boardId ボードID
+     * @param callback 表示完了コールバック
+     */
     display(boardId: number, callback?: (stat: number) => void): void {
         console.log('AtsumaruScoreboardDisplay called.');
 
@@ -544,14 +633,11 @@ export class AtsumaruScoreboardDisplay extends AtsumaruBase {
         });
     }
 
+    /**
+     * スコアボード表示状況をチェックする
+     * @returns 通信結果(@see AtsumaruConsts.CommStat)
+     */
     check(): number {
         return this.stat;
     }
-}
-
-
-//--- servertime --------------
-class AtsumaruServerTime extends AtsumaruBase {
-
-
 }

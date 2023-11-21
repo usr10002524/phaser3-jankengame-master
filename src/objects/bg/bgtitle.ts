@@ -1,5 +1,8 @@
 import { Assets, Consts } from "../../consts";
 
+/**
+ * タイトル背景
+ */
 export class BgTile {
 
     private scene: Phaser.Scene;
@@ -20,6 +23,10 @@ export class BgTile {
     ];
     static COLORS = [0xf6991c, 0xeeece9];
 
+    /**
+     * コンストラクタ
+     * @param scene シーン
+     */
     constructor(scene: Phaser.Scene) {
         this.scene = scene;
         this.container = scene.add.container(scene.game.canvas.width * 0.5, scene.game.canvas.height * 0.5);
@@ -46,6 +53,7 @@ export class BgTile {
         this._setupTile();
     }
 
+    // タイトル背景の作成
     private _setupTile(): void {
         //
         {
@@ -61,6 +69,7 @@ export class BgTile {
         this._scrollUpdate();
     }
 
+    // 背景のスクロール処理
     private _scrollUpdate(): void {
         if (this.tween != null) {
             this.tween.remove();
@@ -82,6 +91,7 @@ export class BgTile {
         });
     }
 
+    // インデックスの初期化
     private _initIndex(): void {
         this.startIndex = [];
 
@@ -90,6 +100,7 @@ export class BgTile {
         }
     }
 
+    // インデックスに応じて背景をタイリング表示する
     private _initDrawBG(): void {
         const orig_x = -480;
         const orig_y = -352;
@@ -122,6 +133,7 @@ export class BgTile {
         }
     }
 
+    // インデックスを更新する
     private _updateIndex(): void {
         for (let i = 0; i < this.startIndex.length; i++) {
             let index = this.startIndex[i];
@@ -132,6 +144,7 @@ export class BgTile {
 
     }
 
+    // 背景表示の更新
     private _updateDrawBG(): void {
         let index = 0;
 

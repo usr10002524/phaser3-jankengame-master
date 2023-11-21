@@ -1,8 +1,29 @@
+/**
+ * ビヘイビア
+ * 
+ * 簡単な振る舞い制御システム。
+ * Behavior を継承して振る舞いを実装する。
+ * インスタンスを作成し、BehaivorManager にaddする。
+ * add した際に initialize() が呼ばれる。
+ * その後、毎フレーム update() が呼ばれる。
+ * update() 時に isFinished() でビヘイビアの終了を監視し、true が返されると、finalize() を呼び、インスタンスを破棄する。
+ * Behavior クラスのコンストラクタで渡す key は BehaivorManager から Behavior を検索する際に使用する。
+ * 同名の key は許容されるが、BehaivorManager に同名の key のBehavior が複数存在した場合、
+ * get は最初に見つかった Behavior を返すことに注意。
+ */
+
 import { Log } from "../service/logwithstamp";
 
+/**
+ * ビヘイビアクラス
+ */
 export abstract class Behavior {
     protected key: string;
 
+    /**
+     * コンストラクタ
+     * @param key 検索用のキー
+     */
     constructor(key: string) {
         this.key = key;
         Log.put(`${key} create.`, key);
@@ -32,13 +53,20 @@ export class BehaviorManager {
     private behaviorMap: Map<number, Behavior>;
     private sequence: number;
 
+    /**
+     * コンストラクタ
+     */
     constructor() {
         this.elems = [];
         this.behaviorMap = new Map<number, Behavior>();
         this.sequence = 0;
     }
 
-    //behavior の追加
+    /**
+     * ビヘイビアを追加する
+     * @param behavior 追加するビヘイビア
+     * @return シーケンス番号
+     */
     add(behavior: Behavior): number {
         behavior.initialize();
         this.sequence++;
@@ -48,6 +76,11 @@ export class BehaviorManager {
         return this.sequence;
     }
 
+    /**
+     * ビヘイビアの終了チェック
+     * @param sequence add のときに発行されたシーケンス番号
+     * @returns ビヘイビアが終了状態のときは true 、そうでないときは false を返す
+     */
     isFinished(sequence: number): boolean {
         const behavior = this.behaviorMap.get(sequence);
         if (behavior != null) {
@@ -58,6 +91,9 @@ export class BehaviorManager {
         }
     }
 
+    /**
+     * 更新処理
+     */
     update(): void {
         let removes: number[] = [];
 
@@ -84,6 +120,9 @@ export class BehaviorManager {
         });
     }
 
+    /**
+     * ビヘイビアマップのクリア
+     */
     clear(): void {
         //すべてに対して終了処理を呼び出す
         this.behaviorMap.forEach((behavior: Behavior, sequence: number) => {

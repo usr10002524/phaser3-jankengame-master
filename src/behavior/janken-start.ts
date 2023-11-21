@@ -4,6 +4,9 @@ import { SceneMain } from "../scene/scene-main";
 import { Behavior } from "../service/behavior";
 import { Log } from "../service/logwithstamp";
 
+/**
+ * じゃんけん開始演出
+ */
 export class JankenStart extends Behavior {
 
     private scene: SceneMain;
@@ -20,6 +23,10 @@ export class JankenStart extends Behavior {
         END: 100,
     };
 
+    /**
+     * コンストラクタ
+     * @param scene シーン
+     */
     constructor(scene: SceneMain) {
         super('JankenStart');
         this.scene = scene;
@@ -29,11 +36,17 @@ export class JankenStart extends Behavior {
     }
 
     //extends Behavior
+    /**
+     * 初期化処理
+     */
     initialize(): void {
         this._updateDemo();
         this.step = JankenStart.Step.INIT;
     }
 
+    /**
+     * 更新処理
+     */
     update(): void {
         switch (this.step) {
             case JankenStart.Step.INIT: {
@@ -58,17 +71,24 @@ export class JankenStart extends Behavior {
         }
     }
 
+    /**
+     * 終了処理
+     */
     finalize(): void {
         if (this.timer != null) {
             this.timer.remove();
         }
     }
 
+    /**
+     * 表示が終了したかチェックする
+     * @returns 表示が終了した場合は true 、そうでない場合は false を返す。
+     */
     isFinished(): boolean {
         return (this.step === JankenStart.Step.END)
     }
 
-
+    // 初期化ステップ
     private _stepInit(): void {
         const panels = this.scene.getPanels();
         if (panels == null) {
@@ -81,6 +101,7 @@ export class JankenStart extends Behavior {
         this.step = JankenStart.Step.INPUT_WAIT;
     }
 
+    // 入力まちステップ
     private _stepInputWait(): void {
         const panels = this.scene.getPanels();
         if (panels == null) {
@@ -103,6 +124,7 @@ export class JankenStart extends Behavior {
         }
     }
 
+    // 終了ステップ
     private _stepFinish(): void {
         const panels = this.scene.getPanels();
         if (panels != null) {
@@ -128,6 +150,7 @@ export class JankenStart extends Behavior {
         this._onEnd();
     }
 
+    // デモ更新
     private _updateDemo(): void {
         const roulette = this.scene.getRoulette();
         if (roulette != null) {
@@ -155,6 +178,7 @@ export class JankenStart extends Behavior {
         }
     }
 
+    // 終了時の処理
     private _onEnd(): void {
         this.step = JankenStart.Step.END;
     }

@@ -4,6 +4,9 @@ import { Assets, Consts } from "../consts";
 import { BgTile } from "../objects/bg/bgtitle";
 import { Roulette } from "../objects/roulette/roulette";
 
+/**
+ * タイトルシーン
+ */
 export class SceneTitle extends Phaser.Scene {
 
     private roulette: Roulette | null;
@@ -19,6 +22,9 @@ export class SceneTitle extends Phaser.Scene {
     private atmrSnapshot: AtsumaruSnapShot | null;
     private soundVolume: SoundVolume | null;
 
+    /**
+     * コンストラクタ
+     */
     constructor() {
         super('SceneTitle');
 
@@ -36,6 +42,9 @@ export class SceneTitle extends Phaser.Scene {
         this.soundVolume = null;
     }
 
+    /**
+     * 初期化処理
+     */
     create(): void {
         this._initVolume();
         this._initSnapshot();
@@ -135,15 +144,18 @@ export class SceneTitle extends Phaser.Scene {
         // this._updateDemo();  //見えないので表示しないTT
     }
 
+    // メインシーンへの遷移
     private _onStart(): void {
         this.scene.start("SceneMain");
     }
 
+    // スコアボード表示開始
     private _onRankingStart(): void {
         const ranking = new AtsumaruScoreboardDisplay();
         ranking.display(AtsumaruConsts.ScoreBoard.HIGHEST);
     }
 
+    // デモ更新
     private _updateDemo(): void {
         const roulette = this.roulette;
         if (roulette != null) {
@@ -171,6 +183,7 @@ export class SceneTitle extends Phaser.Scene {
         }
     }
 
+    // サウンドボリューム初期化
     private _initVolume(): void {
         if (AtsumaruBase.isValid()) {
             this.atmrVolume = new AtsumaruMasterVolume();
@@ -188,6 +201,7 @@ export class SceneTitle extends Phaser.Scene {
         }
     }
 
+    // サウンドボリュームを作成
     private _createSoundVolume(): void {
         const config: SoundVolumeConfig = {
             pos: {
@@ -267,6 +281,7 @@ export class SceneTitle extends Phaser.Scene {
         this.soundVolume = new SoundVolume(this, config);
     }
 
+    // スクリーンショット初期化
     private _initSnapshot(): void {
         this.atmrSnapshot = new AtsumaruSnapShot();
         this.atmrSnapshot.initialize();

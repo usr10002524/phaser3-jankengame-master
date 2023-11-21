@@ -7,6 +7,9 @@ import { Sheet } from "../objects/sheet/sheet";
 import { SceneMain } from "../scene/scene-main";
 import { LocalStorage } from "../common/local-storage";
 
+/**
+ * ログインボーナス表示
+ */
 export class LoginBonus extends Behavior {
 
     private scene: SceneMain;
@@ -47,6 +50,10 @@ export class LoginBonus extends Behavior {
         END: 1000,
     }
 
+    /**
+     * コンストラクタ
+     * @param scene シーン
+     */
     constructor(scene: SceneMain) {
         super('LoginBonus');
 
@@ -61,6 +68,9 @@ export class LoginBonus extends Behavior {
     }
 
     //extends Behavior
+    /**
+     * 更新処理
+     */
     initialize(): void {
         //アツマール有効チェック
         // if (!AtsumaruBase.isValid() && !this.debugAtsumaruCheckSkip) {
@@ -96,6 +106,9 @@ export class LoginBonus extends Behavior {
         this.step = LoginBonus.Step.INIT;
     }
 
+    /**
+     * 更新処理
+     */
     update(): void {
         switch (this.step) {
             case LoginBonus.Step.INIT: {
@@ -172,24 +185,34 @@ export class LoginBonus extends Behavior {
         }
     }
 
+    /**
+     * 終了処理
+     */
     finalize(): void {
 
     }
 
+    /**
+     * 表示が終了したかチェックする
+     * @returns 表示が終了した場合は true 、そうでない場合は false を返す。
+     */
     isFinished(): boolean {
         return this.isEnd;
     }
 
+    // 初期化ステップ
     private _stepInit(): void {
         this.step = LoginBonus.Step.SHEET_IN;
     }
 
+    // シートがスライドして入ってくるステップ
     private _stepSheetIn(): void {
         this.sheet?.setupStart();
         this.sheet?.startSheetIn();
         this.step = LoginBonus.Step.SHEET_IN_WAIT;
     }
 
+    // シードスライドまちステップ
     private _stepSheetInWait(): void {
         if (this.sheet != null) {
             if (this.sheet.isEnd()) {
@@ -201,12 +224,14 @@ export class LoginBonus extends Behavior {
         }
     }
 
+    // スタンプアニメ開始ステップ
     private _stepStampOn(): void {
         this.sheet?.setupStamp();
         this.sheet?.startStamp();
         this.step = LoginBonus.Step.STAMP_ON_WAIT;
     }
 
+    // スタンプアニメ終了まちステップ
     private _stepStampOnWait(): void {
         if (this.sheet != null) {
             if (this.sheet.isEnd()) {
@@ -218,6 +243,7 @@ export class LoginBonus extends Behavior {
         }
     }
 
+    // ログボデータをセーブするステップ
     private _stepSaveData(): void {
         this.step = LoginBonus.Step.SAVE_DATA_WAIT;
 
@@ -249,6 +275,7 @@ export class LoginBonus extends Behavior {
 
     }
 
+    // ログボデータセーブまちステップ
     private _stepSaveDataWait(stat: number): void {
         //通信の成功可否は見ない。失敗しても先に進ませる
         Log.put(`saveServerData result:${stat}.`, 'LoginBonus._stepSaveDataWait');
@@ -273,11 +300,13 @@ export class LoginBonus extends Behavior {
         }
     }
 
+    // シートを切り替えるステップ
     private _stepSheetChange(): void {
         this.sheet?.startSheetChange();
         this.step = LoginBonus.Step.SHEET_CHANGE_WAIT;
     }
 
+    // シート切り替えまちステップ
     private _stepSheetChangeWait(): void {
         if (this.sheet != null) {
             if (this.sheet.isEnd()) {
@@ -289,11 +318,13 @@ export class LoginBonus extends Behavior {
         }
     }
 
+    // 次回ボーナス表示ステップ
     private _stepNextBonus(): void {
         this.sheet?.startNextBonus();
         this.step = LoginBonus.Step.NEXT_BONUS_WAIT;
     }
 
+    // 次回ボーナス表示まちステップ
     private _stepNextBonusWait(): void {
         if (this.sheet != null) {
             if (this.sheet.isEnd()) {
@@ -305,22 +336,25 @@ export class LoginBonus extends Behavior {
         }
     }
 
+    // 注意表示ステップ
     private _stepNotice(): void {
         this.step = LoginBonus.Step.NOTICE_WAIT;
 
     }
 
+    // 注意表示まちステップ
     private _stepNoticeWait(): void {
         this.step = LoginBonus.Step.SHEET_OUT;
     }
 
 
-
+    // シートがスライドして出ていくステップ
     private _stepSheetOut(): void {
         this.sheet?.startSheetOut();
         this.step = LoginBonus.Step.SHEET_OUT_WAIT;
     }
 
+    // シートスライドまちステップ
     private _stepSheetOutWait(): void {
         if (this.sheet != null) {
             if (this.sheet.isEnd()) {
@@ -334,6 +368,7 @@ export class LoginBonus extends Behavior {
         }
     }
 
+    // ログボデータを初期化する
     private _initLoginBonusData(): void {
         const serverDate = Globals.get().getServerData();
         let bonus = serverDate.get(AtsumaruConsts.Data.BONUS);
@@ -365,6 +400,7 @@ export class LoginBonus extends Behavior {
         this.currentBonus = cur.bonus;
     }
 
+    // 終了時の処理
     private _onEnd(): void {
         this.step = LoginBonus.Step.END;
         this.isEnd = true;

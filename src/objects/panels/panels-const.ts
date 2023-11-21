@@ -1,5 +1,8 @@
 import { Assets } from "../../consts";
 
+/**
+ * パネル表示の各種定数
+ */
 export class PanelsConst {
     static panelProp: { x: number, y: number, frame: string }[] = [
         { x: 0, y: -64, frame: Assets.Graphic.Panels.Frames.PANEL_START },

@@ -5,6 +5,9 @@ import { SceneMain } from "../scene/scene-main";
 import { Behavior } from "../service/behavior";
 import { Log } from "../service/logwithstamp";
 
+/**
+ * じゃんけんプレー中処理
+ */
 export class JankenPlay extends Behavior {
 
     private scene: SceneMain;
@@ -24,6 +27,10 @@ export class JankenPlay extends Behavior {
         END: 100,
     };
 
+    /**
+     * コンストラクタ
+     * @param scene シーン
+     */
     constructor(scene: SceneMain) {
         super('JankenPlay');
         this.scene = scene;
@@ -36,11 +43,17 @@ export class JankenPlay extends Behavior {
     }
 
     //extends Behavior
+    /**
+     * 初期化
+     */
     initialize(): void {
         this._updateShuffle();
         this.step = JankenPlay.Step.INIT;
     }
 
+    /**
+     * 更新処理
+     */
     update(): void {
         switch (this.step) {
             case JankenPlay.Step.INIT: {
@@ -65,12 +78,19 @@ export class JankenPlay extends Behavior {
         }
     }
 
+    /**
+     * 終了処理
+     */
     finalize(): void {
         this._deleteRandomSelectTimer();
         this._deleteSeTimer();
         this._deleteShuffleTimer();
     }
 
+    /**
+     * 表示が終了したかチェックする
+     * @returns 表示が終了した場合は true 、そうでない場合は false を返す。
+     */
     isFinished(): boolean {
         return (this.step === JankenPlay.Step.END)
     }
@@ -95,6 +115,7 @@ export class JankenPlay extends Behavior {
         this.step = JankenPlay.Step.INPUT_WAIT;
     }
 
+    // プレーヤー入力まち
     private _stepInputWait(): void {
         const panels = this.scene.getPanels();
         if (panels == null) {
@@ -132,6 +153,7 @@ export class JankenPlay extends Behavior {
         }
     }
 
+    // 終了ステップ
     private _stepFinish(): void {
 
         const suits = [Consts.Janken.Suit.GU, Consts.Janken.Suit.CHOKI, Consts.Janken.Suit.PA];
@@ -172,25 +194,30 @@ export class JankenPlay extends Behavior {
         this._onEnd();
     }
 
+    // 終了まち
     private _stepFinishWait(): void {
         // this.step = JankenPlay.Step.END;
     }
 
+    // ランダム選択タイマーを開始する
     private _startRandomSelectTimer(): void {
         this._deleteRandomSelectTimer();
 
         this.randomSelectTimer = this.scene.time.addEvent({
             delay: 3000,
-            callback: this._rondomSelect,
+            callback: this._randomSelect,
             callbackScope: this,
         });
     }
+
+    // ランダム選択タイマーを削除する
     private _deleteRandomSelectTimer(): void {
         if (this.randomSelectTimer != null) {
             this.randomSelectTimer.remove();
         }
     }
 
+    // SE再生タイマーを開始
     private _startSeTimer(): void {
         this._deleteSeTimer();
 
@@ -200,12 +227,14 @@ export class JankenPlay extends Behavior {
             callbackScope: this,
         });
     }
+    // SE再生タイマーを削除
     private _deleteSeTimer(): void {
         if (this.seTimer != null) {
             this.seTimer.remove();
         }
     }
 
+    // 「じゃん」または「あい」の表示
     private _playFirst(): void {
         const janken = this.scene.getJankenManager();
         const moji = this.scene.getMoji();
@@ -224,6 +253,7 @@ export class JankenPlay extends Behavior {
         }
     }
 
+    // 「けん」または「こで」の表示
     private _playSecond(): void {
         const janken = this.scene.getJankenManager();
         const moji = this.scene.getMoji();
@@ -242,6 +272,7 @@ export class JankenPlay extends Behavior {
         }
     }
 
+    // 「ぽん」または「しょ」の表示
     private _playThird(): void {
         const janken = this.scene.getJankenManager();
         const moji = this.scene.getMoji();
@@ -260,7 +291,8 @@ export class JankenPlay extends Behavior {
         }
     }
 
-    private _rondomSelect(): void {
+    // ランダムで選択する
+    private _randomSelect(): void {
         if (this.select !== Consts.Janken.Suit.NONE) {
             return; //選択済みなので何もしない
         }
@@ -268,6 +300,7 @@ export class JankenPlay extends Behavior {
         this.select = random.get(Consts.Janken.SUIT_MAX) + Consts.Janken.SUIT_MIN;
     }
 
+    // CPU側決定演出　グーチョキパーの表示を切り替え
     private _updateShuffle(): void {
         //すでに決定しているなら何もしない
         if (this.select != Consts.Janken.Suit.NONE) {
@@ -299,12 +332,15 @@ export class JankenPlay extends Behavior {
             });
         }
     }
+
+    // シャッフルタイマーを削除
     private _deleteShuffleTimer(): void {
         if (this.shuffleTimer != null) {
             this.shuffleTimer.remove();
         }
     }
 
+    // 終了時の処理
     private _onEnd(): void {
         const panels = this.scene.getPanels();
         if (panels != null) {

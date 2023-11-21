@@ -2,7 +2,9 @@
  * 各種定数
  */
 export const Consts = {
+    // タイトル
     TITLE: "JANKEN GAME",
+    // バージョン
     VERSION: "202303200910",
 
     //画面サイズ
@@ -12,6 +14,7 @@ export const Consts = {
         BGCOLOR: 0x000000,
     },
 
+    // 各UIの表示優先度
     Roulette: {
         DEPTH: 10,
     },
@@ -71,7 +74,9 @@ export const Consts = {
         DEPTH: 10
     },
 
+    // じゃんけん
     Janken: {
+        // じゃんけんの手
         Suit: {
             NONE: 0,
             GU: 1,
@@ -81,6 +86,7 @@ export const Consts = {
         SUIT_MIN: 1,
         SUIT_MAX: 3,
 
+        // 勝敗定義
         Result: {
             NONE: 0,
             WIN: 1,
@@ -89,6 +95,7 @@ export const Consts = {
         },
     },
 
+    // 文字種別
     Moji: {
         Type: {
             NONE: 0,
@@ -105,6 +112,7 @@ export const Consts = {
         DEPTH: 20,
     },
 
+    // スタンプシート
     Sheet: {
         Sheet: {
             Position: {
@@ -145,16 +153,22 @@ export const Consts = {
         },
     },
 
+    // 背景
     BG: {
         DEPTH: 0,
     },
 
+    // ログインボーナス
     Bonus: {
+        // データバージョン
         VERSION: 'JANKEN:20221222',
+        // ボーナスの内容
         DEAILY: [100, 100, 100, 100, 100, 100, 200],
+        // 日付の切り替え時間（午前5時）
         DAY_OFFSET: 5 * 60 * 60 * 1000,
     },
 
+    // ポイント表示
     Point: {
         Base: {
             Position: {

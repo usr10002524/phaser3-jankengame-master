@@ -1,15 +1,25 @@
-
+/**
+ * 1マスあたりの情報
+ */
 export type Cell = {
     win: number;
     weight: number;
 }
 
+/**
+ * ルーレット全体の情報
+ */
 export type CellTable = {
     cells: Cell[];
 }
 
+/**
+ * ルーレットの各種定数
+ */
 export const RouletteCoreConsts = {
+    // 各マスのWINと出現率
     CellTables: [
+        // ローリスク・ローリターン
         {
             cells: [
                 { win: 50, weight: 50 },
@@ -26,6 +36,7 @@ export const RouletteCoreConsts = {
                 { win: 2, weight: 2000 },
             ],
         },
+        // 中間
         {
             cells: [
                 { win: 50, weight: 100 },
@@ -42,6 +53,7 @@ export const RouletteCoreConsts = {
                 { win: 2, weight: 2000 },
             ],
         },
+        // ハイリスク・ハイリターン
         {
             cells: [
                 { win: 50, weight: 150 },

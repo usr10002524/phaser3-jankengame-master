@@ -1,3 +1,6 @@
+/**
+ * パネルイメージクラス
+ */
 export class PanelImage extends Phaser.GameObjects.Image {
 
     private prevX: number;
@@ -7,6 +10,14 @@ export class PanelImage extends Phaser.GameObjects.Image {
     private lastTouched: boolean;
     private touchAllowed: boolean;
 
+    /**
+     * コンストラクタ
+     * @param scene シーン
+     * @param x X座標
+     * @param y Y座標
+     * @param key ファイルのキー
+     * @param frame 表示するフレーム
+     */
     constructor(scene: Phaser.Scene, x: number, y: number, key: string, frame: string) {
         super(scene, x, y, key, frame);
         this.prevX = x;
@@ -40,6 +51,10 @@ export class PanelImage extends Phaser.GameObjects.Image {
         return this.lastTouched;
     }
 
+    /**
+     * タッチ入力を許可するかどうかを設定する
+     * @param on_off タッチ入力を許可するかどうか
+     */
     setTouchAllow(on_off: boolean): void {
         this.touchAllowed = on_off;
     }

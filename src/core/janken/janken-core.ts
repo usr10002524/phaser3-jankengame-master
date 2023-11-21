@@ -3,6 +3,9 @@ import { Log } from "../../service/logwithstamp";
 import { Random } from "../../service/random";
 import { JankenCoreConsts } from "./janken-core-consts";
 
+/**
+ * 1ゲームあたりの情報
+ */
 export type JankenInfo = {
     player: number;
     enemy: number;
@@ -10,13 +13,23 @@ export type JankenInfo = {
     force: boolean;
 }
 
+/**
+ * じゃんけんゲームコア
+ */
 export class JankenCore {
 
+    // 乱数
     private random: Random | null;
+    // 履歴
     private history: JankenInfo[];
+    // 終了したか
     private finished: boolean;
+    // 勝率テーブルのインデックス
     private rateIndex: number;
 
+    /**
+     * コンストラクタ
+     */
     constructor() {
         this.random = null;
         this.history = [];
@@ -24,6 +37,12 @@ export class JankenCore {
         this.rateIndex = JankenCoreConsts.DEFAULT_RATE_INDEX;
     }
 
+    /**
+     * 初期化
+     * @param config コンフィグ
+     * @param random 乱数
+     * @param rateIndex 勝率テーブルのインデックス
+     */
     start(config: { random: Random, rateIndex: number }): void {
         this.random = config.random;
         this.history = [];
@@ -31,6 +50,12 @@ export class JankenCore {
         this._setRateIndex(config.rateIndex);
     }
 
+    /**
+     * 1プレー実行する
+     * @param playerSuit プレーヤーの手
+     * @returns enmySuit CPUの手
+     * @returns result   結果
+     */
     play(playerSuit: number): { enemySuit: number, result: number } {
         if (this.random == null) {
             return { enemySuit: Consts.Janken.Suit.NONE, result: Consts.Janken.Result.NONE };  //乱数生成機が未設定
@@ -94,14 +119,23 @@ export class JankenCore {
         return { enemySuit: enemySuit, result: result };
     }
 
+    /**
+     * 履歴を取得する
+     * @returns 履歴
+     */
     getHistory(): JankenInfo[] {
         return this.history;
     }
 
+    /**
+     * ラウンド数を取得する
+     * @returns ラウンド数
+     */
     getRound(): number {
         return this.history.length;
     }
 
+    // 勝率インデックスを設定する
     private _setRateIndex(rateIndex: number): void {
         if (rateIndex >= 0 && rateIndex < JankenCoreConsts.Rate.length) {
             this.rateIndex = rateIndex;
@@ -112,6 +146,7 @@ export class JankenCore {
         }
     }
 
+    // 勝率を取得する
     private _getRate(): number {
         if (this.rateIndex >= 0 && this.rateIndex < JankenCoreConsts.Rate.length) {
             return JankenCoreConsts.Rate[this.rateIndex];
@@ -122,6 +157,7 @@ export class JankenCore {
         }
     }
 
+    // 勝敗判定を行う
     private _judge(playerSuit: number, enemySuit: number): number {
         switch (playerSuit) {
             case Consts.Janken.Suit.GU:
@@ -148,6 +184,7 @@ export class JankenCore {
         return Consts.Janken.Result.NONE;
     }
 
+    // 勝率に基づいて勝敗を決める
     private _judgeWithRate(): number {
         if (this.random == null) {
             Log.put(`this.rondom == null`);
@@ -164,6 +201,7 @@ export class JankenCore {
         }
     }
 
+    // 結果に応じてCPUの手を取得する
     private _getEnemySuitFromResult(playerSuit: number, result: number): number {
         switch (result) {
             case Consts.Janken.Result.WIN: {
@@ -181,6 +219,7 @@ export class JankenCore {
         }
     }
 
+    // 指定された手に勝つ手を取得
     private _getWinSuit(suit: number): number {
         switch (suit) {
             case Consts.Janken.Suit.GU: return Consts.Janken.Suit.PA;
@@ -190,6 +229,7 @@ export class JankenCore {
         return Consts.Janken.Suit.NONE;
     }
 
+    // 指定された手に負ける手を取得
     private _getLoseSuit(suit: number): number {
         switch (suit) {
             case Consts.Janken.Suit.GU: return Consts.Janken.Suit.CHOKI;

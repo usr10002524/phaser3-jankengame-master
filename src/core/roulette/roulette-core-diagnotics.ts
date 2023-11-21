@@ -1,12 +1,22 @@
 import { Log } from "../../service/logwithstamp";
 import { RouletteInfo } from "./roulette-core";
 
+/**
+ * ルーレット統計情報
+ */
 export class RouletteCoreDiagnotics {
+    // 試行回数
     private trials: number;
+    // 各マスの停止数
     private cells: number[];
+    // 累計WIN
     private win: number;
+    // 不正結果回数
     private invalidCount: number;
 
+    /**
+     * コンストラクタ
+     */
     constructor() {
         this.trials = 0;
         this.cells = []
@@ -14,6 +24,10 @@ export class RouletteCoreDiagnotics {
         this.invalidCount = 0;
     }
 
+    /**
+     * 初期化処理
+     * @param maxIndex セル数
+     */
     start(maxIndex: number): void {
         this.trials = 0;
         this.cells = []
@@ -25,6 +39,10 @@ export class RouletteCoreDiagnotics {
         }
     }
 
+    /**
+     * 結果を追加する
+     * @param result ルーレット結果
+     */
     add(result: RouletteInfo[]) {
         for (let i = 0; i < result.length; i++) {
             this.trials++;
@@ -40,10 +58,20 @@ export class RouletteCoreDiagnotics {
         }
     }
 
+    /**
+     * 統計情報を取得する
+     * @returns trails 試行回数
+     * @returns cells 各マスの停止数
+     * @returns win 累計WIN
+     * @returns invalidCount 不正結果回数
+     */
     get(): { trials: number, cells: number[], win: number, invalidCount: number } {
         return { trials: this.trials, cells: this.cells, win: this.win, invalidCount: this.invalidCount };
     }
 
+    /**
+     * 統計情報を出力する
+     */
     report(): void {
         Log.put(`,trials,${this.trials}`);
         Log.put(`,result`);

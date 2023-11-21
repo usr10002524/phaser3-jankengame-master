@@ -1,9 +1,16 @@
 import { Random } from "./random";
 
+/**
+ * 抽選ユーティリティクラス
+ */
 export class Lottery {
 
     private random: Random; //乱数生成機
 
+    /**
+     * コンストラクタ
+     * @param random 乱数
+     */
     constructor(random: Random) {
         this.random = random;
     }

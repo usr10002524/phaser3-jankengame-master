@@ -2,6 +2,9 @@ import { Assets, Consts } from "../../consts";
 import { Globals } from "../../globals";
 import { IncrementTimer } from "../../service/inctimer";
 
+/**
+ * ポイント表示クラス
+ */
 export class Point {
 
     private scene: Phaser.Scene;
@@ -13,6 +16,10 @@ export class Point {
     private lastScore: number;
     private incTimer: IncrementTimer | null;
 
+    /**
+     * コンストラクタ
+     * @param scene シーン
+     */
     constructor(scene: Phaser.Scene) {
         this.scene = scene;
         this.score = 0;
@@ -48,6 +55,9 @@ export class Point {
         this._setPoint(this.score);
     }
 
+    /**
+     * 更新処理
+     */
     update(): void {
 
         //スコアが加算されたらインクリメントを行う
@@ -78,6 +88,7 @@ export class Point {
         }
     }
 
+    // ポイント表示
     private _setPoint(point: number): void {
         //まず今あるものを片付ける
         this._removeNumber();
@@ -104,7 +115,7 @@ export class Point {
         this.container.add(this.num);
     }
 
-
+    // ポイントの表示を消す
     private _removeNumber(): void {
         this.container.remove(this.num);
 
@@ -115,6 +126,7 @@ export class Point {
         this.num = [];
     }
 
+    // 数字の表示位置を取得する
     private _getNumberPosition(keta: number): { x: number, y: number } {
         const base_x = Consts.Point.Character.Position.x;
         const base_y = Consts.Point.Character.Position.y;
@@ -124,6 +136,7 @@ export class Point {
         return { x: x, y: y };
     }
 
+    // 数字の表示フレーム名を取得する
     private _getNumberFrame(c: string): string {
         switch (c) {
             case '0': return Assets.Graphic.Point.Frames.POINT_N0;
@@ -140,6 +153,7 @@ export class Point {
         }
     }
 
+    // インクリメントの更新時間を取得する
     private _getDelay(value: number) {
         if (value <= Consts.Point.Threshold.Small.VALUE) {
             return Consts.Point.Threshold.Small.DELAY;

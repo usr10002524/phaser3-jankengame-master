@@ -21,6 +21,9 @@ import { LoginBonusData } from "../bonus/login-bonus-data";
 import { SoundVolume, SoundVolumeConfig } from "../common/sound-volume";
 import { LocalStorage } from "../common/local-storage";
 
+/**
+ * メインシーン
+ */
 export class SceneMain extends Phaser.Scene {
 
     private roulette: Roulette | null;
@@ -70,6 +73,9 @@ export class SceneMain extends Phaser.Scene {
         END: 1000,
     }
 
+    /**
+     * コンストラクタ
+     */
     constructor() {
         super('SceneMain');
 
@@ -98,6 +104,9 @@ export class SceneMain extends Phaser.Scene {
         this.soundVolume = null;
     }
 
+    /**
+     * 初期化処理
+     */
     create(): void {
         this._initVolume();
         this._initSnapshot();
@@ -123,6 +132,9 @@ export class SceneMain extends Phaser.Scene {
         this.rouletteWin = 0;
     }
 
+    /**
+     * 更新処理
+     */
     update(): void {
         this.panels?.update();
         this.behaviorManager.update();
@@ -194,26 +206,50 @@ export class SceneMain extends Phaser.Scene {
         }
     }
 
+    /**
+     * パネル表示クラスを取得
+     * @returns パネル表示クラス
+     */
     getPanels(): Panels | null {
         return this.panels;
     }
 
+    /**
+     * ルーレット表示クラスを取得
+     * @returns ルーレット表示クラス
+     */
     getRoulette(): Roulette | null {
         return this.roulette;
     }
 
+    /**
+     * 文字表示クラスを取得
+     * @returns 文字表示クラス
+     */
     getMoji(): Moji | null {
         return this.moji;
     }
 
+    /**
+     * じゃんけんマネージャを取得
+     * @returns じゃんけんマネージャ
+     */
     getJankenManager(): JankenManager | null {
         return this.jankenManager;
     }
 
+    /**
+     * ルーレットマネージャを取得
+     * @returns ルーレットマネージャ
+     */
     getRouletteManager(): RouletteManager | null {
         return this.rouletteManager;
     }
 
+    /**
+     * じゃんけんの手選択時の処理
+     * @param suit プレーヤーの手
+     */
     onSelectSuit(suit: number): void {
 
         if (this.jankenManager == null) {
@@ -232,12 +268,13 @@ export class SceneMain extends Phaser.Scene {
         this.roulette?.lampSet(this.cpuSuit, true);
     }
 
-
+    // ログインボーナスステップ
     private _stepLogin(): void {
         this.behaviorId = this.behaviorManager.add(new LoginBonus(this));
         this.step = SceneMain.Step.LOGIN_WAIT;
     }
 
+    // ログインボーナスまちステップ
     private _stepLoginWait(): void {
         if (this.behaviorManager.isFinished(this.behaviorId)) {
             if (!SceneMain.SAVE_EVERY_GAME) {
@@ -247,6 +284,7 @@ export class SceneMain extends Phaser.Scene {
         }
     }
 
+    // じゃんけん開始ステップ
     private _stepJankenStart(): void {
         this.playerSuit = Consts.Janken.Suit.NONE;
         this.cpuSuit = Consts.Janken.Suit.NONE;
@@ -270,6 +308,7 @@ export class SceneMain extends Phaser.Scene {
         this.step = SceneMain.Step.JANKEN_START_WAIT;
     }
 
+    // じゃんけん開始まちステップ
     private _stepJankenStartWait(): void {
         if (this._isDateChanged()) {
             this.scene.start("SceneTitle");
@@ -282,11 +321,13 @@ export class SceneMain extends Phaser.Scene {
         }
     }
 
+    // じゃんけんプレー中ステップ
     private _stepJankenPlay(): void {
         this.behaviorId = this.behaviorManager.add(new JankenPlay(this));
         this.step = SceneMain.Step.JANKEN_PLAY_WAIT;
     }
 
+    // じゃんけんプレー中まちステップ
     private _stepJankenPlayWait(): void {
         //演出の終了待ち
         if (this.behaviorManager.isFinished(this.behaviorId)) {
@@ -294,6 +335,7 @@ export class SceneMain extends Phaser.Scene {
         }
     }
 
+    // じゃんけん結果ステップ
     private _stepJankenResult(): void {
         switch (this.jankenResult) {
             case Consts.Janken.Result.WIN: {
@@ -312,6 +354,7 @@ export class SceneMain extends Phaser.Scene {
         this.step = SceneMain.Step.JANKEN_RESULT_WAIT;
     }
 
+    // じゃんけん結果まちステップ
     private _stepJankenResultWait(): void {
         if (this.behaviorManager.isFinished(this.behaviorId)) {
             switch (this.jankenResult) {
@@ -334,6 +377,7 @@ export class SceneMain extends Phaser.Scene {
         }
     }
 
+    // ルーレットプレー中ステップ
     private _stepRoulettePlay(): void {
         this.rouletteCellIndex = 0;
         this.rouletteWin = 0;
@@ -350,6 +394,7 @@ export class SceneMain extends Phaser.Scene {
         this.step = SceneMain.Step.ROULETTE_PLAY_WAIT;
     }
 
+    // ルーレットプレー中まちステップ
     private _stepRoulettePlayWait(): void {
         //演出の終了待ち
         if (this.behaviorManager.isFinished(this.behaviorId)) {
@@ -357,6 +402,7 @@ export class SceneMain extends Phaser.Scene {
         }
     }
 
+    // ルーレット結果ステップ
     private _stepRouletteResult(): void {
         //獲得WINを加算
         Globals.get().addMedal(this.rouletteWin);
@@ -364,11 +410,12 @@ export class SceneMain extends Phaser.Scene {
 
     }
 
+    // ルーレット結果待ちステップ
     private _stepRouletteResultWait(): void {
         this.step = SceneMain.Step.JANKEN_START;
     }
 
-
+    // 日付変わりチェック
     private _isDateChanged(): boolean {
         const serverData = Globals.get().getServerData();
         const data = serverData.get(AtsumaruConsts.Data.BONUS);
@@ -386,7 +433,7 @@ export class SceneMain extends Phaser.Scene {
         return bonusData.isDateChanged();
     }
 
-
+    // サーバデータセーブタイマー開始
     private _serverDataSaveTimer(): void {
         if (this.saveTimer != null) {
             this.saveTimer.remove();
@@ -407,6 +454,7 @@ export class SceneMain extends Phaser.Scene {
         });
     }
 
+    // サーバデータ保存
     private _serverSave(): void {
         // if (!AtsumaruBase.isValid()) {
         //     return; //アツマールが有効ではない
@@ -450,7 +498,7 @@ export class SceneMain extends Phaser.Scene {
 
     }
 
-
+    // サウンドボリューム初期化
     private _initVolume(): void {
         if (AtsumaruBase.isValid()) {
             this.atmrVolume = new AtsumaruMasterVolume();
@@ -468,6 +516,7 @@ export class SceneMain extends Phaser.Scene {
         }
     }
 
+    // サウンドボリューム作成
     private _createSoundVolume(): void {
         const config: SoundVolumeConfig = {
             pos: {

@@ -1,6 +1,9 @@
 import { Assets, Consts } from "../../consts";
 import { Log } from "../../service/logwithstamp";
 
+/**
+ * 文字表示クラス
+ */
 export class Moji {
 
     private scene: Phaser.Scene;
@@ -9,6 +12,10 @@ export class Moji {
     private callTween: Phaser.Tweens.Tween | null;
     private resultTween: Phaser.Tweens.Tween | null;
 
+    /**
+     * コンストラクタ
+     * @param scene シーン
+     */
     constructor(scene: Phaser.Scene) {
         this.scene = scene;
         //コール用
@@ -23,6 +30,10 @@ export class Moji {
         this.resultTween = null;
     }
 
+    /**
+     * 指定した画像を表示する
+     * @param type 表示する画像
+     */
     draw(type: number): void {
 
         switch (type) {
@@ -56,7 +67,7 @@ export class Moji {
 
     }
 
-
+    // コール画像のセットアップ
     private _callSetup(type: number): void {
         const frame = this._getFrame(type);
         const position = this._getPosition(type);
@@ -70,6 +81,7 @@ export class Moji {
         this.call.setVisible(false);
     }
 
+    // 結果画像のセットアップ
     private _resultSetup(type: number): void {
         const frame = this._getFrame(type);
         const position = this._getPosition(type);
@@ -83,6 +95,7 @@ export class Moji {
         this.result.setVisible(false);
     }
 
+    // 指定画像のフレーム名を取得する
     private _getFrame(type: number): string {
         switch (type) {
             case Consts.Moji.Type.JAN: return Assets.Graphic.Moji.Frames.JAN;
@@ -98,6 +111,7 @@ export class Moji {
         }
     }
 
+    // 指定画像の表示位置を取得する
     private _getPosition(type: number): { x: number, y: number } {
         switch (type) {
             case Consts.Moji.Type.JAN: return { x: 200, y: 125 };
@@ -113,6 +127,7 @@ export class Moji {
         }
     }
 
+    // 指定画像の回転角度を取得する
     private _getAngle(type: number): number {
         switch (type) {
             case Consts.Moji.Type.JAN: return -30;
@@ -128,6 +143,7 @@ export class Moji {
         }
     }
 
+    // じゃんけんの手の tween をセットアップする
     private _setupTweenSuit(type: number): void {
         if (this.callTween != null) {
             this.callTween.remove();
@@ -166,6 +182,7 @@ export class Moji {
         })
     }
 
+    // 勝ち表示の tween をセットアップする
     private _setupTweenWin(): void {
         if (this.resultTween != null) {
             this.resultTween.remove();
@@ -199,6 +216,7 @@ export class Moji {
         })
     }
 
+    // 「負け」表示の tween をセットアップする
     private _setupTweenLose(): void {
         if (this.resultTween != null) {
             this.resultTween.remove();
@@ -234,6 +252,7 @@ export class Moji {
         })
     }
 
+    // 「あいこ」表示の tween をセットアップする
     private _setupTweenDraw(): void {
         if (this.resultTween != null) {
             this.resultTween.remove();
